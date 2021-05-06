@@ -16,6 +16,7 @@ namespace Tahuan.BookStore
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -26,13 +27,39 @@ namespace Tahuan.BookStore
                 app.UseDeveloperExceptionPage();
             }
 
+            //add custom middleware - Taylor
+
+            //app.Use(async(context, next) =>
+            //{
+            //    await context.Response.WriteAsync("1st middleware - ");
+            //    await next();
+            //    await context.Response.WriteAsync("back to 1st middleware - ");
+
+            //});
+
+            //app.Use(async (context, next) =>
+            //{
+            //    await context.Response.WriteAsync("2nd middleware - ");
+            //});
+
+
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
+                endpoints.MapDefaultControllerRoute(); //URL/home/index
+                //endpoints.MapGet("/", async context =>
+                //{
+                //    await context.Response.WriteAsync("Hello World!" + env.EnvironmentName);
+                //});
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/taylor", async context =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    await context.Response.WriteAsync("Hello Taylor!");
                 });
             });
         }
