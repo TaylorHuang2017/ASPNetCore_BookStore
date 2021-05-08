@@ -42,7 +42,7 @@ namespace Tahuan.BookStore
             //    await context.Response.WriteAsync("2nd middleware - ");
             //});
 
-
+            app.UseStaticFiles();
 
             app.UseRouting();
 

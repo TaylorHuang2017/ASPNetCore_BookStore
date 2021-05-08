@@ -1,0 +1,43 @@
+﻿
+@{
+    Layout = null;
+    var dt = DateTime.Now;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/lib/twitter-bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/Site.css" rel="stylesheet" />
+</head>
+<body class="container">    
+    <img src="~/images/battery.jpg" class="logo"/>
+    <h1 class="h1">This is the home page</h1>
+    <button class="btn btn-danger">click me</button>
+    <p>@dt.Year</p>
+    @{ 
+        if (dt.Second % 2 == 0)
+        {
+            <span>当前秒为偶数</span>
+        }
+        else
+        {
+            <span>当前秒奇数</span>
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            <p>I want to learn ASP.NET Core @i</p>
+        }
+    }
+</body>
+</html>
+<script src="~/lib/jquery/jquery.js"></script>
+<script>
+    $(document).ready(function () {
+        alert("Page loaded");
+    });
+</script>
