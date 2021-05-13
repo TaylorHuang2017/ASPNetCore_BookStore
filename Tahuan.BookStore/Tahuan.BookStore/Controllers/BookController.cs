@@ -20,7 +20,8 @@ namespace Tahuan.BookStore.Controllers
         public ViewResult GetAllBooks()
         {
             //return _bookRepository.GetAllBooks();
-            return View();
+            var data = _bookRepository.GetAllBooks();
+            return View(data);
         }
 
         public BookModel GetBook(int id)
