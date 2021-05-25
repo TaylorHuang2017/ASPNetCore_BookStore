@@ -33,7 +33,7 @@ namespace Tahuan.BookStore.Repository
                 new BookModel(){ Id =3, Title = "C#", Author = "Monika", Description = "C sharp language", Category="Programming", Language="English", TotalPages=908},
                 new BookModel(){ Id =4, Title = "Java", Author = "Taylor", Description = "Java web programming", Category="Programming", Language="Chinese", TotalPages=210},
                 new BookModel(){ Id =5, Title = "Php", Author = "Frank", Description = "Php is here", Category="Programming", Language="English", TotalPages=340},
-                new BookModel(){ Id =5, Title = "Azure DevOps", Author = "Frank", Description = "DevOps is the future", Category="DevOps", Language="Spanish", TotalPages=689},
+                new BookModel(){ Id =6, Title = "Azure DevOps", Author = "Frank", Description = "DevOps is the future", Category="DevOps", Language="Spanish", TotalPages=689},
             };
         }
     }
