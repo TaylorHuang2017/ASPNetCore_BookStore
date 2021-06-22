@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +17,8 @@ namespace Tahuan.BookStore
     {
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        // IServiceCollection 用于注册dependancy 的容器 ： Dependancy Injection 
+        // where services are registered
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<BookStoreContext>(options => options.UseSqlServer("Server =.; Database = BookStore; Integrated Security = True;"));
@@ -26,8 +28,8 @@ namespace Tahuan.BookStore
             //{
             //      option.HtmlHelperOptions.ClientValidationEnabled = false;
             //});
-            services.AddScoped<BookRepository, BookRepository>();
-            services.AddScoped<LanguageRepository, LanguageRepository>();
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<ILanguageRepository, LanguageRepository>();
 
         }
 
@@ -60,20 +62,29 @@ namespace Tahuan.BookStore
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute(); //URL/home/index
+                //endpoints.MapDefaultControllerRoute(); //URL/home/index
                 //endpoints.MapGet("/", async context =>
                 //{
                 //    await context.Response.WriteAsync("Hello World!" + env.EnvironmentName);
                 //});
+
+                endpoints.MapControllerRoute(
+                    name: "Default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
+                    name: "AboutUs",
+                    pattern: "about-us",
+                    defaults: new { controller = "Home", action = "AboutUs"});
             });
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/taylor", async context =>
-                {
-                    await context.Response.WriteAsync("Hello Taylor!");
-                });
-            });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapGet("/taylor", async context =>
+            //    {
+            //        await context.Response.WriteAsync("Hello Taylor!");
+            //    });
+            //});
         }
     }
 }

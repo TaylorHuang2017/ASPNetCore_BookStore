@@ -8,7 +8,7 @@ using Tahuan.BookStore.Models;
 
 namespace Tahuan.BookStore.Repository
 {
-    public class LanguageRepository
+    public class LanguageRepository : ILanguageRepository
     {
         private readonly BookStoreContext _context = null;
 
@@ -20,7 +20,7 @@ namespace Tahuan.BookStore.Repository
         public async Task<List<LanguageModel>> GetLanguages()
         {
             return await _context.Language.Select(x => new LanguageModel()
-            { 
+            {
                 Id = x.Id,
                 Description = x.Description,
                 Name = x.Name

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Tahuan.BookStore.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace Tahuan.BookStore.Models
 {
@@ -28,8 +29,24 @@ namespace Tahuan.BookStore.Models
         public string Language { get; set; }
 
         [Required]
-        [Display(Name = "Total pages of book")]
+        [Display(Name = "Total pages of the book")]
         public int TotalPages { get; set; }
+
+        [Required]
+        [Display(Name = "The cover photo of the book")]
+        public IFormFile CoverPhoto { get; set; }
+        public string CoverImageUrl { get; set; }
+
+        [Required]
+        [Display(Name = "The gallery photos of the book")]
+        public IFormFileCollection GalleryFiles { get; set; }
+
+        public List<GalleryModel> Gallery { get; set; }
+
+        [Required]
+        [Display(Name = "Upload your book in .pdf format")]
+        public IFormFile BookPdf { get; set; }
+        public string BookPdfUrl { get; set; }
 
     }
 }

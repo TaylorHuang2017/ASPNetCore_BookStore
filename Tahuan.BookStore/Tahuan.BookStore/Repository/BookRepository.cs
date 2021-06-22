@@ -8,7 +8,7 @@ using Tahuan.BookStore.Models;
 
 namespace Tahuan.BookStore.Repository
 {
-    public class BookRepository
+    public class BookRepository : IBookRepository
     {
         private readonly BookStoreContext _context = null;
 
@@ -27,44 +27,33 @@ namespace Tahuan.BookStore.Repository
                 Title = model.Title,
                 LanguageId = model.LanguageId,
                 TotalPages = model.TotalPages,
-                UpdatedOn = DateTime.UtcNow
+                UpdatedOn = DateTime.UtcNow,
+                CoverImageUrl = model.CoverImageUrl,
+                BookPdfUrl = model.BookPdfUrl
             };
+
+            newBook.bookGallery = new List<BookGallery>();
+
+            foreach (var file in model.Gallery)
+            {
+                newBook.bookGallery.Add(new BookGallery()
+                {
+                    Name = file.Name,
+                    URL = file.URL
+                });
+            }
 
             await _context.Books.AddAsync(newBook);
             await _context.SaveChangesAsync();
 
             return newBook.Id;
-        
+
         }
 
         public async Task<List<BookModel>> GetAllBooks()
         {
-            var books = new List<BookModel>();
-            var allbooks = await _context.Books.ToListAsync();
-            if (allbooks?.Any() == true)
-            {
-                foreach (var book in allbooks)
-                {
-                    books.Add(new BookModel()
-                    {
-                        Author = book.Author,
-                        Category = book.Category,
-                        Description = book.Description,
-                        Id = book.Id,
-                        LanguageId = book.LanguageId,
-                        Language = book.Language.Name,
-                        Title = book.Title,
-                        TotalPages = book.TotalPages
-                    }); 
-                }
-            }
-            return books;
-        }
-
-        public async Task<BookModel> GetBookById(int id)
-        {
-            var book = await _context.Books.Where( x => x.Id == id)
-                .Select( book => new BookModel()
+            return await _context.Books
+                .Select(book => new BookModel()
                 {
                     Author = book.Author,
                     Category = book.Category,
@@ -73,7 +62,55 @@ namespace Tahuan.BookStore.Repository
                     LanguageId = book.LanguageId,
                     Language = book.Language.Name,
                     Title = book.Title,
-                    TotalPages = book.TotalPages
+                    TotalPages = book.TotalPages,
+                    CoverImageUrl = book.CoverImageUrl
+                }).ToListAsync();
+
+
+        }
+
+        public async Task<List<BookModel>> GetTopBooksAsync(int count)
+        {
+            return await _context.Books
+                .Select(book => new BookModel()
+                {
+                    Author = book.Author,
+                    Category = book.Category,
+                    Description = book.Description,
+                    Id = book.Id,
+                    LanguageId = book.LanguageId,
+                    Language = book.Language.Name,
+                    Title = book.Title,
+                    TotalPages = book.TotalPages,
+                    CoverImageUrl = book.CoverImageUrl
+                }).Take(count).ToListAsync();
+
+
+        }
+
+
+
+        public async Task<BookModel> GetBookById(int id)
+        {
+            var book = await _context.Books.Where(x => x.Id == id)
+                .Select(book => new BookModel()
+                {
+                    Author = book.Author,
+                    Category = book.Category,
+                    Description = book.Description,
+                    Id = book.Id,
+                    LanguageId = book.LanguageId,
+                    Language = book.Language.Name,
+                    Title = book.Title,
+                    TotalPages = book.TotalPages,
+                    CoverImageUrl = book.CoverImageUrl,
+                    Gallery = book.bookGallery.Select(g => new GalleryModel()
+                    {
+                        Id = g.Id,
+                        Name = g.Name,
+                        URL = g.URL
+                    }).ToList(),
+                    BookPdfUrl = book.BookPdfUrl
                 }).FirstOrDefaultAsync();
             //var book = await _context.Books.FindAsync(id);
             //return _context.Books.Where(x => x.Id == id).FirstOrDefaultAsync();
@@ -107,5 +144,5 @@ namespace Tahuan.BookStore.Repository
     }
 
 
- 
+
 }

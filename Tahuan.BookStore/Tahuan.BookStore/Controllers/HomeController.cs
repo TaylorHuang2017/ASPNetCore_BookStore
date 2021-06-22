@@ -8,8 +8,10 @@ using Tahuan.BookStore.Models;
 
 namespace Tahuan.BookStore.Controllers
 {
+    [Route("[controller]/[action]")]
     public class HomeController: Controller
     {
+        [Route("~/")]
         public ViewResult Index()
         {
             //////
@@ -28,6 +30,7 @@ namespace Tahuan.BookStore.Controllers
             return View();
         }
 
+        [Route("about-us", Name ="about-us", Order = 1)][HttpGet]
         public ViewResult AboutUs()
         {
             return View();

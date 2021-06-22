@@ -15,6 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\books\cover\" />
+    <Folder Include="wwwroot\books\gallery\" />
+    <Folder Include="wwwroot\books\pdf\" />
     <Folder Include="wwwroot\images\book\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
