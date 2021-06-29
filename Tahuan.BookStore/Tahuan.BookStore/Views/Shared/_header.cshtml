@@ -1,4 +1,18 @@
-﻿@inject Tahuan.BookStore.Repository.IBookRepository _bookRepo
+﻿@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Options
+@inject IConfiguration _configuration
+@inject IOptionsSnapshot<NewBookAlertConfig> _newBookAlertconfiguration
+@inject Tahuan.BookStore.Repository.IBookRepository _bookRepo
+
+@{ 
+    var newBookAlertconfiguration = _newBookAlertconfiguration.Value;
+}
+
+@*@{ 
+    var newBook = new NewBookAlertConfig();
+    _configuration.Bind("NewBookAlert", newBook);
+}*@
+
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
@@ -39,4 +53,13 @@
             </div>
         </div>
     </nav>
-</header>
+
+
+    @if (newBookAlertconfiguration.DisplayNewBookAlert)
+    {
+        <div class="alert alert-info" role="alert">
+            @newBookAlertconfiguration.BookName
+        </div>
+     }
+        
+    </header>

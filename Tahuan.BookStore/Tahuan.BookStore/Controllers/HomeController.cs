@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -8,29 +10,33 @@ using Tahuan.BookStore.Models;
 
 namespace Tahuan.BookStore.Controllers
 {
-    [Route("[controller]/[action]")]
+   
+    //[Route("[controller]/[action]")]
     public class HomeController: Controller
     {
-        [Route("~/")]
+        private readonly NewBookAlertConfig  _newBokAlertconfiguration;
+
+        public HomeController(IOptionsSnapshot<NewBookAlertConfig> newBookAlertconfiguration)
+        {
+            _newBokAlertconfiguration = newBookAlertconfiguration.Value;
+        }
+
+        //[Route("~/")]
         public ViewResult Index()
         {
-            //////
-            ViewBag.Title = "Taylor";
+            //var result = _newBokAlertconfiguration["AppName"];            
 
+            ViewBag.Title = "Taylor";
             dynamic data = new ExpandoObject();
             data.Id = 1;
             data.Name = "Tairan";
-
             ViewBag.Data = data;
-
-            ///////
-            ViewData["book"] = new BookModel() { Author = "Lei", Id = 10};
-
+            ViewData["book"] = new BookModel() { Author = "Lei", Id = 10 };
 
             return View();
         }
 
-        [Route("about-us", Name ="about-us", Order = 1)][HttpGet]
+        //[Route("about-us", Name ="about-us", Order = 1)][HttpGet]
         public ViewResult AboutUs()
         {
             return View();
