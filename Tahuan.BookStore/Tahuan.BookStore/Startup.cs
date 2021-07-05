@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +24,7 @@ namespace Tahuan.BookStore
         {
             _configuration = configuration;
         }
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // Use this method to add services to the container. This method gets called by the runtime. 
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         // IServiceCollection 用于注册dependancy 的容器 ： Dependancy Injection 
         // where services are registered
@@ -31,6 +32,19 @@ namespace Tahuan.BookStore
         {
             services.AddDbContext<BookStoreContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
             //services.AddDbContext<BookStoreContext>(options => options.UseSqlServer(_configuration["ConnectionStrings:DefaultConnection"]));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<BookStoreContext>();
+
+            services.Configure<IdentityOptions>( options => 
+            {
+                options.Password.RequiredLength = 5;
+                options.Password.RequiredUniqueChars = 1;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false; 
+            });
 
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -40,11 +54,15 @@ namespace Tahuan.BookStore
             //});
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<ILanguageRepository, LanguageRepository>();
-            services.Configure<NewBookAlertConfig>(_configuration.GetSection("NewBookAlert"));
+            services.AddScoped<IAccountRepository, AccountRepository>();
+
+            services.Configure<NewBookAlertConfig>(_configuration.GetSection("NewBookAlert"));            
+
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        //add custom middleware - Taylor
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -52,7 +70,7 @@ namespace Tahuan.BookStore
                 app.UseDeveloperExceptionPage();
             }
 
-            //add custom middleware - Taylor
+            
 
             //app.Use(async(context, next) =>
             //{
@@ -70,6 +88,8 @@ namespace Tahuan.BookStore
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
